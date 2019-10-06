@@ -1,6 +1,4 @@
-package crud.people.author;
-
-import crud.people.Human;
+package crud.bean;
 
 import java.util.Date;
 

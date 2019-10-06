@@ -1,10 +1,9 @@
-package crud.people.client;
+package crud.bean;
 
-import crud.people.Human;
-
+import java.io.Serializable;
 import java.util.Date;
 
-public class Client extends Human {
+public class Client extends Human implements Serializable {
     private Date registrationDate;
 
     public Client() {
@@ -22,4 +21,6 @@ public class Client extends Human {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+
 }

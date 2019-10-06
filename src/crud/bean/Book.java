@@ -1,6 +1,4 @@
-package crud.book;
-
-import crud.people.author.Author;
+package crud.bean;
 
 public class Book implements Comparable<Book>{
     private Author author;
@@ -9,9 +7,9 @@ public class Book implements Comparable<Book>{
     private BookCover cover;
 
     public enum BookCover {
-        softCover,
-        hardCover,
-        unknownCover;
+        SOFT_COVER,
+        HARD_COVER,
+        UNKNOWN_COVER;
     }
 
     public Book() {

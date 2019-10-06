@@ -1,4 +1,4 @@
-package crud.people;
+package crud.bean;
 
 import java.util.Date;
 

@@ -6,8 +6,8 @@ import crud.bean.Client;
 public final class DAOFactory {
     private static final DAOFactory instance = new DAOFactory();
 
-    private final Items<Book> bookList = new Items<Book>("Books.xml");
-    private final Items<Client> clientList = new Items<Client>("Clients.xml");
+    private final ItemsDAO<Book> bookList = new ItemsDAO<Book>("Books.xml");
+    private final ItemsDAO<Client> clientList = new ItemsDAO<Client>("Clients.xml");
 
     private DAOFactory() {};
 
@@ -15,11 +15,11 @@ public final class DAOFactory {
         return instance;
     }
 
-    public Items<Book> getBookDAO () {
+    public ItemsDAO<Book> getBookDAO () {
         return bookList;
     }
 
-    public Items<Client> getClientDAO () {
+    public ItemsDAO<Client> getClientDAO () {
         return clientList;
     }
 }

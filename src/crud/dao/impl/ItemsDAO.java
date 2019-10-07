@@ -8,16 +8,16 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Items<T> implements DAO<T>, Iterable<T> {
+public class ItemsDAO<T> implements DAO<T>, Iterable<T> {
 
     private LinkedList<T> items;
     private String fileName;
 
-    public Items() {
+    public ItemsDAO() {
         items = new LinkedList<T>();
     }
 
-    public Items(String fileName) {
+    public ItemsDAO(String fileName) {
         this();
         this.fileName = fileName;
     }
@@ -49,9 +49,7 @@ public class Items<T> implements DAO<T>, Iterable<T> {
     @Override
     public void SaveItems() throws IOException {
         File file = new File(fileName);
-        if (!file.exists()){
-            file.createNewFile();
-        }
+        file.createNewFile();
 
         try (XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)))){
             xmlEncoder.writeObject(items);

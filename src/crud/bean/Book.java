@@ -1,7 +1,7 @@
 package crud.bean;
 
 public class Book implements Comparable<Book>{
-    private Author author;
+    private String author;
     private String title;
     private int pageAmount;
     private BookCover cover;
@@ -15,18 +15,18 @@ public class Book implements Comparable<Book>{
     public Book() {
     }
 
-    public Book(Author author, String title, int pageAmount, BookCover cover) {
+    public Book(String author, String title, int pageAmount, BookCover cover) {
         this.author = author;
         this.title = title;
         this.pageAmount = pageAmount;
         this.cover = cover;
     }
 
-    public Author getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 

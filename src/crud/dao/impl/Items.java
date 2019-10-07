@@ -29,6 +29,10 @@ public class Items<T> implements DAO<T>, Iterable<T> {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }*/
+	
+	public void Sort(Comparator<? super T> comparator) {
+		items.sort(comparator);
+	}
 
     @Override
     public void LoadItems() throws FileNotFoundException {

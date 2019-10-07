@@ -18,19 +18,20 @@ public class Items<T> implements DAO<T>, Iterable<T> {
     }
 
     public Items(String fileName) {
+        this();
         this.fileName = fileName;
     }
 
-    public String getFileName() {
+   /* public String getFileName() {
         return fileName;
-    }
-
-    public void Sort(Comparator<? super T> comparator) {
-        items.sort(comparator);
     }
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }*/
+
+    public void Sort(Comparator<? super T> comparator) {
+        items.sort(comparator);
     }
 
     @Override
@@ -41,12 +42,7 @@ public class Items<T> implements DAO<T>, Iterable<T> {
         }
 
         try (XMLDecoder xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(fileName)))){
-            while (true) {
-                items.add((T) xmlDecoder.readObject());
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException ex) {
-
+            items = (LinkedList<T>) xmlDecoder.readObject();
         }
     }
 
@@ -58,9 +54,7 @@ public class Items<T> implements DAO<T>, Iterable<T> {
         }
 
         try (XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)))){
-            for (T item:items) {
-                xmlEncoder.writeObject(item);
-            }
+            xmlEncoder.writeObject(items);
         }
     }
 

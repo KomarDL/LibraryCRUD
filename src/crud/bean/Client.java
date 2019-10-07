@@ -3,7 +3,7 @@ package crud.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Client extends Human implements Serializable {
+public class Client extends Human implements Serializable, Comparable<Human> {
     private Date registrationDate;
 
     public Client() {

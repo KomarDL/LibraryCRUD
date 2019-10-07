@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public interface DAO<T> {
-    public void AddItem(T client);
-    public void DeleteItem(T client);
+    public void AddItem(T item);
+    public void DeleteItem(T item);
     public void SaveItems() throws IOException;
     public void LoadItems() throws FileNotFoundException;
 }

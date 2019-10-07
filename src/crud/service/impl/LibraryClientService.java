@@ -8,9 +8,10 @@ import crud.service.intr.LibraryLogic;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 
-public class LibraryClientService implements LibraryLogic<Client> {
+public class LibraryClientService implements LibraryLogic<Client>, Iterable<Client> {
 
     private ItemsDAO<Client> clients;
 
@@ -58,5 +59,10 @@ public class LibraryClientService implements LibraryLogic<Client> {
     @Override
     public void LoadItems() throws FileNotFoundException {
         clients.LoadItems();
+    }
+
+    @Override
+    public Iterator<Client> iterator() {
+        return clients.iterator();
     }
 }

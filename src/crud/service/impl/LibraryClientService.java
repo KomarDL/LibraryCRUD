@@ -7,8 +7,6 @@ import crud.dao.impl.ItemsDAO;
 import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,7 +15,7 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
 
     private ItemsDAO<Client> clients;
 
-    public LibraryClientService() {
+    LibraryClientService() {
         clients = DAOFactory.getInstance().getClientDAO();
     }
 
@@ -38,19 +36,25 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
     }
 
     @Override
-    public void UpdateItem(Client srcItem, Client newItem) {
-        clients.DeleteItem(srcItem);
-        clients.AddItem(newItem);
+    public boolean UpdateItem(Client srcItem, Client newItem) {
+        boolean result = clients.DeleteItem(srcItem);
+        if (result){
+            result = clients.AddItem(newItem);
+            if (!result){
+                clients.AddItem(srcItem);
+            }
+        }
+        return result;
     }
 
     @Override
-    public void AddItem(Client item) {
-        clients.AddItem(item);
+    public boolean AddItem(Client item) {
+        return clients.AddItem(item);
     }
 
     @Override
-    public void DeleteItem(Client item) {
-        clients.DeleteItem(item);
+    public boolean DeleteItem(Client item) {
+        return clients.DeleteItem(item);
     }
 
     @Override

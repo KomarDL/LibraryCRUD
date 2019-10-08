@@ -1,13 +1,12 @@
 package crud.service.impl;
 
 import crud.bean.Book;
+import crud.dao.exception.DAOException;
 import crud.dao.impl.DAOFactory;
 import crud.dao.impl.ItemsDAO;
 import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,7 +15,7 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
 
     private ItemsDAO<Book> books;
 
-    public LibraryBookService() {
+    LibraryBookService() {
         books = DAOFactory.getInstance().getBookDAO();
     }
 
@@ -37,26 +36,32 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
     }
 
     @Override
-    public void UpdateItem(Book srcItem, Book newItem) {
-        books.DeleteItem(srcItem);
-        books.AddItem(newItem);
+    public boolean UpdateItem(Book srcItem, Book newItem) {
+        boolean result = books.DeleteItem(srcItem);
+        if (result){
+            result = books.AddItem(newItem);
+            if (!result){
+                books.AddItem(srcItem);
+            }
+        }
+        return result;
     }
 
     @Override
-    public void AddItem(Book item) {
-        books.AddItem(item);
+    public boolean AddItem(Book item) {
+        return books.AddItem(item);
     }
 
     @Override
-    public void DeleteItem(Book item) {
-        books.DeleteItem(item);
+    public boolean DeleteItem(Book item) {
+        return books.DeleteItem(item);
     }
 
     @Override
     public void SaveItems() throws ServiceException {
         try {
             books.SaveItems();
-        } catch (IOException e) {
+        } catch (DAOException e) {
             throw new ServiceException("Невозможно сохранить изменения", e);
         }
     }
@@ -65,7 +70,7 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
     public void LoadItems() throws ServiceException {
         try {
             books.LoadItems();
-        } catch (FileNotFoundException e) {
+        } catch (DAOException e) {
             throw new ServiceException("Сохранённый список книг не найден", e);
         }
     }

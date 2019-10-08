@@ -6,7 +6,7 @@ import crud.bean.Client;
 public final class DAOFactory {
     private static final DAOFactory instance = new DAOFactory();
 
-    private final ItemsDAO<Book> bookList = new ItemsDAO<Book>("Books.xml");
+    private final ItemsDAO<Book> bookList = new ItemsDAO<Book>("Books.xml");//property file
     private final ItemsDAO<Client> clientList = new ItemsDAO<Client>("Clients.xml");
 
     private DAOFactory() {};

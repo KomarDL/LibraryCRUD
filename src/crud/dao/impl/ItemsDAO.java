@@ -14,11 +14,11 @@ public class ItemsDAO<T> implements DAO<T>, Iterable<T> {
     private LinkedList<T> items;
     private String fileName;
 
-    public ItemsDAO() {
+    private ItemsDAO() {
         items = new LinkedList<T>();
     }
 
-    public ItemsDAO(String fileName) {
+    ItemsDAO(String fileName) {
         this();
         this.fileName = fileName;
     }
@@ -55,19 +55,19 @@ public class ItemsDAO<T> implements DAO<T>, Iterable<T> {
 
         try (XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)))){
             xmlEncoder.writeObject(items);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | SecurityException e) {
             throw new DAOException("Невозможно сохранить данные", e);
         }
     }
 
     @Override
-    public void AddItem(T item) {
-        items.add(item);
+    public boolean AddItem(T item) {
+        return items.add(item);
     }
 
     @Override
-    public void DeleteItem(T item) {
-        items.remove(item);
+    public boolean DeleteItem(T item) {
+        return items.remove(item);
     }
 
     @Override

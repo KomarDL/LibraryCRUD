@@ -1,6 +1,7 @@
 package crud.bean;
 
 import java.util.Date;
+import java.util.Objects;
 
 abstract public class Human implements Comparable<Human> {
     private String name;
@@ -53,5 +54,32 @@ abstract public class Human implements Comparable<Human> {
     @Override
     public int compareTo(Human human) {
         return surname.compareToIgnoreCase(human.surname);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Human human = (Human) o;
+
+        if (!Objects.equals(name, human.name)) return false;
+        if (!Objects.equals(surname, human.surname)) return false;
+        if (!Objects.equals(patronymic, human.patronymic)) return false;
+        return Objects.equals(birthday, human.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (patronymic != null ? patronymic.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + surname + " " + patronymic + " " + birthday ;
     }
 }

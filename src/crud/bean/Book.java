@@ -1,5 +1,7 @@
 package crud.bean;
 
+import java.util.Objects;
+
 public class Book implements Comparable<Book>{
     private String author;
     private String title;
@@ -57,5 +59,32 @@ public class Book implements Comparable<Book>{
     @Override
     public int compareTo(Book book) {
         return title.compareToIgnoreCase(book.title);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (pageAmount != book.pageAmount) return false;
+        if (!Objects.equals(author, book.author)) return false;
+        if (!Objects.equals(title, book.title)) return false;
+        return cover == book.cover;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = author != null ? author.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + pageAmount;
+        result = 31 * result + (cover != null ? cover.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return author + " " + title + " " + pageAmount + " " + cover;
     }
 }

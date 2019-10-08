@@ -1,8 +1,10 @@
 package crud.service.impl;
 
 import crud.bean.Client;
+import crud.dao.exception.DAOException;
 import crud.dao.impl.DAOFactory;
 import crud.dao.impl.ItemsDAO;
+import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
 import java.io.FileNotFoundException;
@@ -52,13 +54,21 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
     }
 
     @Override
-    public void SaveItems() throws IOException {
-        clients.SaveItems();
+    public void SaveItems() throws ServiceException {
+        try {
+            clients.SaveItems();
+        } catch (DAOException e) {
+            throw new ServiceException("Невозможно сохранить изменения", e);
+        }
     }
 
     @Override
-    public void LoadItems() throws FileNotFoundException {
-        clients.LoadItems();
+    public void LoadItems() throws ServiceException {
+        try {
+            clients.LoadItems();
+        } catch (DAOException e) {
+            throw new ServiceException("Сохранённый список посетителей не найден", e);
+        }
     }
 
     @Override

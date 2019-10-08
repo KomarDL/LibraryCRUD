@@ -1,5 +1,6 @@
 package crud.dao.impl;
 
+import crud.dao.exception.DAOException;
 import crud.dao.intr.DAO;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -35,24 +36,27 @@ public class ItemsDAO<T> implements DAO<T>, Iterable<T> {
 	}
 
     @Override
-    public void LoadItems() throws FileNotFoundException {
-        File file = new File(fileName);
-        if (!file.exists()){
-            throw new FileNotFoundException("No such file in directory");
-        }
-
+    public void LoadItems() throws DAOException {
         try (XMLDecoder xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(fileName)))){
             items = (LinkedList<T>) xmlDecoder.readObject();
+        } catch (FileNotFoundException e) {
+            throw new DAOException("Данные не найдены", e);
         }
     }
 
     @Override
-    public void SaveItems() throws IOException {
+    public void SaveItems() throws DAOException {
         File file = new File(fileName);
-        file.createNewFile();
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new DAOException("Невозможно сохранить данные", e);
+        }
 
         try (XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)))){
             xmlEncoder.writeObject(items);
+        } catch (FileNotFoundException e) {
+            throw new DAOException("Невозможно сохранить данные", e);
         }
     }
 

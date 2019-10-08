@@ -3,6 +3,7 @@ package crud.service.impl;
 import crud.bean.Book;
 import crud.dao.impl.DAOFactory;
 import crud.dao.impl.ItemsDAO;
+import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
 import java.io.FileNotFoundException;
@@ -52,13 +53,21 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
     }
 
     @Override
-    public void SaveItems() throws IOException {
-        books.SaveItems();
+    public void SaveItems() throws ServiceException {
+        try {
+            books.SaveItems();
+        } catch (IOException e) {
+            throw new ServiceException("Невозможно сохранить изменения", e);
+        }
     }
 
     @Override
-    public void LoadItems() throws FileNotFoundException {
-        books.LoadItems();
+    public void LoadItems() throws ServiceException {
+        try {
+            books.LoadItems();
+        } catch (FileNotFoundException e) {
+            throw new ServiceException("Сохранённый список книг не найден", e);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import crud.bean.Book;
 import crud.dao.exception.DAOException;
 import crud.dao.impl.DAOFactory;
 import crud.dao.impl.ItemsDAO;
+import crud.dao.intr.DAO;
 import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
@@ -13,15 +14,22 @@ import java.util.LinkedList;
 
 public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
 
-    private ItemsDAO<Book> books;
+    private DAO<LinkedList<Book>> bookDAO;
+    private LinkedList<Book> books;
+    private final String path  = new String("Books.xml");
 
     LibraryBookService() {
-        books = DAOFactory.getInstance().getBookDAO();
+        bookDAO = DAOFactory.getInstance().getBookDAO();
+    }
+
+    @Override
+    public LinkedList<Book> GetItems() {
+        return new LinkedList<Book>(books);
     }
 
     @Override
     public void Sort(Comparator<? super Book> comparator) {
-        books.Sort(comparator);
+        books.sort(comparator);
     }
 
     @Override
@@ -37,11 +45,11 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
 
     @Override
     public boolean UpdateItem(Book srcItem, Book newItem) {
-        boolean result = books.DeleteItem(srcItem);
+        boolean result = books.removeFirstOccurrence(srcItem);
         if (result){
-            result = books.AddItem(newItem);
+            result = books.add(newItem);
             if (!result){
-                books.AddItem(srcItem);
+                books.add(srcItem);
             }
         }
         return result;
@@ -49,29 +57,30 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
 
     @Override
     public boolean AddItem(Book item) {
-        return books.AddItem(item);
+        return books.add(item);
     }
 
+
     @Override
-    public boolean DeleteItem(Book item) {
-        return books.DeleteItem(item);
+    public boolean DeleteItem(Book value) {
+        return books.removeFirstOccurrence(value);
     }
 
     @Override
     public void SaveItems() throws ServiceException {
         try {
-            books.SaveItems();
+            bookDAO.SaveItems(books, path);
         } catch (DAOException e) {
-            throw new ServiceException("Невозможно сохранить изменения", e);
+            throw new ServiceException("Cannot save changes", e);
         }
     }
 
     @Override
     public void LoadItems() throws ServiceException {
         try {
-            books.LoadItems();
+            bookDAO.LoadItems(path);
         } catch (DAOException e) {
-            throw new ServiceException("Сохранённый список книг не найден", e);
+            throw new ServiceException("Cannot load books", e);
         }
     }
 

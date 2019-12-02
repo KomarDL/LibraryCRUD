@@ -4,24 +4,30 @@ import crud.bean.Client;
 import crud.dao.exception.DAOException;
 import crud.dao.impl.DAOFactory;
 import crud.dao.impl.ItemsDAO;
+import crud.dao.intr.DAO;
 import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class LibraryClientService implements LibraryLogic<Client>, Iterable<Client> {
 
-    private ItemsDAO<Client> clients;
+    private DAO<LinkedList<Client>> clientDAO;
+    private LinkedList<Client> clients;
+    private final String path  = new String("Clients.xml");
 
     LibraryClientService() {
-        clients = DAOFactory.getInstance().getClientDAO();
+        clientDAO = DAOFactory.getInstance().getClientDAO();
+    }
+
+    @Override
+    public LinkedList<Client> GetItems() {
+        return new LinkedList<Client>(clients);
     }
 
     @Override
     public void Sort(Comparator<? super Client> comparator) {
-        clients.Sort(comparator);
+        clients.sort(comparator);
     }
 
     @Override
@@ -37,11 +43,11 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
 
     @Override
     public boolean UpdateItem(Client srcItem, Client newItem) {
-        boolean result = clients.DeleteItem(srcItem);
+        boolean result = clients.removeFirstOccurrence(srcItem);
         if (result){
-            result = clients.AddItem(newItem);
+            result = clients.add(newItem);
             if (!result){
-                clients.AddItem(srcItem);
+                clients.add(srcItem);
             }
         }
         return result;
@@ -49,29 +55,30 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
 
     @Override
     public boolean AddItem(Client item) {
-        return clients.AddItem(item);
+        return clients.add(item);
     }
 
+
     @Override
-    public boolean DeleteItem(Client item) {
-        return clients.DeleteItem(item);
+    public boolean DeleteItem(Client value) {
+        return clients.removeFirstOccurrence(value);
     }
 
     @Override
     public void SaveItems() throws ServiceException {
         try {
-            clients.SaveItems();
+            clientDAO.SaveItems(clients, path);
         } catch (DAOException e) {
-            throw new ServiceException("Невозможно сохранить изменения", e);
+            throw new ServiceException("Cannot save changes", e);
         }
     }
 
     @Override
     public void LoadItems() throws ServiceException {
         try {
-            clients.LoadItems();
+            clientDAO.LoadItems(path);
         } catch (DAOException e) {
-            throw new ServiceException("Сохранённый список посетителей не найден", e);
+            throw new ServiceException("Cannot load clients", e);
         }
     }
 

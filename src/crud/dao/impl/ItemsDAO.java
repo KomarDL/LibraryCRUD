@@ -9,69 +9,32 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ItemsDAO<T> implements DAO<T>, Iterable<T> {
+public class ItemsDAO<T> implements DAO<T> {
 
-    private LinkedList<T> items;
-    private String fileName;
-
-    private ItemsDAO() {
-        items = new LinkedList<T>();
+    ItemsDAO() {
     }
-
-    ItemsDAO(String fileName) {
-        this();
-        this.fileName = fileName;
-    }
-
-   /* public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }*/
-	
-	public void Sort(Comparator<? super T> comparator) {
-		items.sort(comparator);
-	}
 
     @Override
-    public void LoadItems() throws DAOException {
-        try (XMLDecoder xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(fileName)))){
-            items = (LinkedList<T>) xmlDecoder.readObject();
+    public T LoadItems(String path) throws DAOException {
+        try (XMLDecoder in = new XMLDecoder(new BufferedInputStream(new FileInputStream(path)));){
+            T data = (T)in.readObject();
+            return data;
         } catch (FileNotFoundException e) {
-            throw new DAOException("Данные не найдены", e);
+            throw new DAOException("Cannot find data", e);
         }
     }
 
     @Override
-    public void SaveItems() throws DAOException {
-        File file = new File(fileName);
+    public void SaveItems (T dataToSave, String path) throws DAOException {
+        File file = new File(path);
         try {
             file.createNewFile();
+            XMLEncoder out = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(path)));
+            out.writeObject(dataToSave);
+            out.flush();
+            out.close();
         } catch (IOException e) {
-            throw new DAOException("Невозможно сохранить данные", e);
+            throw new DAOException("Cannot save data", e);
         }
-
-        try (XMLEncoder xmlEncoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)))){
-            xmlEncoder.writeObject(items);
-        } catch (FileNotFoundException | SecurityException e) {
-            throw new DAOException("Невозможно сохранить данные", e);
-        }
-    }
-
-    @Override
-    public boolean AddItem(T item) {
-        return items.add(item);
-    }
-
-    @Override
-    public boolean DeleteItem(T item) {
-        return items.remove(item);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return items.iterator();
     }
 }

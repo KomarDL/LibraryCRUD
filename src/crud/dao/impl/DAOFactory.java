@@ -2,12 +2,16 @@ package crud.dao.impl;
 
 import crud.bean.Book;
 import crud.bean.Client;
+import crud.dao.intr.DAO;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public final class DAOFactory {
     private static final DAOFactory instance = new DAOFactory();
 
-    private final ItemsDAO<Book> bookList = new ItemsDAO<Book>("Books.xml");//property file
-    private final ItemsDAO<Client> clientList = new ItemsDAO<Client>("Clients.xml");
+    private final DAO<LinkedList<Book>> bookList = new ItemsDAO<LinkedList<Book>>();
+    private final DAO<LinkedList<Client>> clientList = new ItemsDAO<LinkedList<Client>>();
 
     private DAOFactory() {};
 
@@ -15,11 +19,11 @@ public final class DAOFactory {
         return instance;
     }
 
-    public ItemsDAO<Book> getBookDAO () {
+    public DAO<LinkedList<Book>> getBookDAO () {
         return bookList;
     }
 
-    public ItemsDAO<Client> getClientDAO () {
+    public DAO<LinkedList<Client>> getClientDAO () {
         return clientList;
     }
 }

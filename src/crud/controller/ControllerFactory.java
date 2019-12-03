@@ -2,7 +2,7 @@ package crud.controller;
 
 public class ControllerFactory {
     private static final ControllerFactory instance = new ControllerFactory();
-    private LibraryController viewManager = new LibraryController();
+    private LibraryController libraryController = new LibraryController();
 
     private ControllerFactory() {
     }
@@ -11,7 +11,7 @@ public class ControllerFactory {
         return instance;
     }
 
-    public LibraryController getViewManager() {
-        return viewManager;
+    public LibraryController getLibraryController() {
+        return libraryController;
     }
 }

@@ -3,9 +3,13 @@ package crud.bean;
 import java.util.Objects;
 
 public class Book implements Comparable<Book>{
+    @FieldInfo(name = "Author name", isRepresented = true)
     private String author;
+    @FieldInfo(name = "Book title", isRepresented = true)
     private String title;
+    @FieldInfo(name = "Page amount", isRepresented = true)
     private int pageAmount;
+    @FieldInfo(name = "Type of cover(soft, hard, unknown", isRepresented = true)
     private BookCover cover;
 
     public enum BookCover {

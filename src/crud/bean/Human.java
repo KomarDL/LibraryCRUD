@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Objects;
 
 abstract public class Human implements Comparable<Human> {
+    @FieldInfo(name = "Name", isRepresented = true)
     private String name;
+    @FieldInfo(name = "Surname", isRepresented = true)
     private String surname;
+    @FieldInfo(name = "Patronymic", isRepresented = true)
     private String patronymic;
+    @FieldInfo(name = "Birthday in dd/MM/yy format", isRepresented = true)
     private Date birthday;
 
     public Human() {

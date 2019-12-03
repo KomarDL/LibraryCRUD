@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Client extends Human implements Serializable, Comparable<Human> {
+    @FieldInfo(name = "Registration data in dd/MM/yy format", isRepresented = true)
     private Date registrationDate;
 
     public Client() {

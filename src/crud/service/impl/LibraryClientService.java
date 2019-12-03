@@ -18,11 +18,16 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
 
     LibraryClientService() {
         clientDAO = DAOFactory.getInstance().getClientDAO();
+        clients = new LinkedList<Client>();
     }
 
     @Override
-    public LinkedList<Client> GetItems() {
-        return new LinkedList<Client>(clients);
+    public HashMap<Integer, Client> GetItems() {
+        HashMap<Integer, Client> result = new HashMap<Integer, Client>();
+        for (Client client : clients) {
+            result.put(clients.indexOf(client), client);
+        }
+        return result;
     }
 
     @Override
@@ -31,24 +36,28 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
     }
 
     @Override
-    public LinkedList<Client> Find(Comparator<Client> comparator, Client comparedItem) {
-        LinkedList<Client> result = new LinkedList<Client>();
+    public HashMap<Integer, Client> Find(Comparator<Client> comparator, Client comparedItem) {
+        HashMap<Integer, Client> result = new HashMap<Integer, Client>();
         for (Client client : clients) {
             if (comparator.compare(client, comparedItem) == 0) {
-                result.add(client);
+                result.put(clients.indexOf(client), client);
             }
         }
         return result;
     }
 
     @Override
-    public boolean UpdateItem(Client srcItem, Client newItem) {
-        boolean result = clients.removeFirstOccurrence(srcItem);
-        if (result){
+    public boolean UpdateItem(Integer index, Client newItem) throws ServiceException {
+        boolean result = false;
+        try {
+            Client tmp = clients.remove(index.intValue());
             result = clients.add(newItem);
-            if (!result){
-                clients.add(srcItem);
+            if (!result) {
+                clients.add(tmp);
             }
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("Wrong index", e);
         }
         return result;
     }
@@ -60,8 +69,13 @@ public class LibraryClientService implements LibraryLogic<Client>, Iterable<Clie
 
 
     @Override
-    public boolean DeleteItem(Client value) {
-        return clients.removeFirstOccurrence(value);
+    public void DeleteItem(Integer index) throws ServiceException {
+        try {
+            clients.remove(index.intValue());
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("Wrong index", e);
+        }
     }
 
     @Override

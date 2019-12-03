@@ -9,6 +9,7 @@ import crud.service.exception.ServiceException;
 import crud.service.intr.LibraryLogic;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -23,8 +24,12 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
     }
 
     @Override
-    public LinkedList<Book> GetItems() {
-        return new LinkedList<Book>(books);
+    public HashMap<Integer, Book> GetItems() {
+        HashMap<Integer, Book> result = new HashMap<Integer, Book>();
+        for (Book client : books) {
+            result.put(books.indexOf(client), client);
+        }
+        return result;
     }
 
     @Override
@@ -33,24 +38,28 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
     }
 
     @Override
-    public LinkedList<Book> Find(Comparator<Book> comparator, Book comparedItem) {
-        LinkedList<Book> result = new LinkedList<Book>();
-        for (Book book : books) {
-            if (comparator.compare(book, comparedItem) == 0) {
-                result.add(book);
+    public HashMap<Integer, Book> Find(Comparator<Book> comparator, Book comparedItem) {
+        HashMap<Integer, Book> result = new HashMap<Integer, Book>();
+        for (Book client : books) {
+            if (comparator.compare(client, comparedItem) == 0) {
+                result.put(books.indexOf(client), client);
             }
         }
         return result;
     }
 
     @Override
-    public boolean UpdateItem(Book srcItem, Book newItem) {
-        boolean result = books.removeFirstOccurrence(srcItem);
-        if (result){
+    public boolean UpdateItem(Integer index, Book newItem) throws ServiceException {
+        boolean result = false;
+        try {
+            Book tmp = books.remove(index.intValue());
             result = books.add(newItem);
-            if (!result){
-                books.add(srcItem);
+            if (!result) {
+                books.add(tmp);
             }
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("Wrong index", e);
         }
         return result;
     }
@@ -62,8 +71,13 @@ public class LibraryBookService implements LibraryLogic<Book>, Iterable<Book> {
 
 
     @Override
-    public boolean DeleteItem(Book value) {
-        return books.removeFirstOccurrence(value);
+    public void DeleteItem(Integer index) throws ServiceException {
+        try {
+            books.remove(index.intValue());
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new ServiceException("Wrong index", e);
+        }
     }
 
     @Override

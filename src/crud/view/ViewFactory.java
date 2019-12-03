@@ -2,7 +2,7 @@ package crud.view;
 
 public class ViewFactory {
     private static final ViewFactory instance = new ViewFactory();
-    private LibraryView viewManager = new LibraryView();
+    private LibraryView libraryView = new LibraryView();
 
     private ViewFactory() {
     }
@@ -11,7 +11,7 @@ public class ViewFactory {
         return instance;
     }
 
-    public LibraryView getViewManager() {
-        return viewManager;
+    public LibraryView getLibraryView() {
+        return libraryView;
     }
 }

@@ -5,9 +5,6 @@ import crud.dao.intr.DAO;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 public class ItemsDAO<T> implements DAO<T> {
 
